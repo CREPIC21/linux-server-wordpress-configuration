@@ -13,7 +13,7 @@
 - add created public key to your VM machine `home` directory by copy/pasting it to the VM `nano .ssh/authorized_keys` file
 - now you can SSH to the VM without password(you will not be asked for a password anymore: `ssh -p 22 <user_name>@<vm_ip_address>`
 - disable password authentication on the server and restart the SSH service:
--- `nano /etc/ssh/sshd_config` -> `PasswordAuthentication no`
+-> `nano /etc/ssh/sshd_config` -> `PasswordAuthentication no`
 -- `systemctl restart ssh`
 
 ## **3. Getting a Domain name**
