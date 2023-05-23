@@ -129,11 +129,11 @@ $TTL    86400
                           86400 )       ; Negative Cache TTL
 ;
 @       IN      NS      ns1.wordpresslinux.xyz.
-ns1     IN      A       40.69.203.168
+ns1     IN      A       vm_ip_address
 mail    IN      MX 10   mail.wordpresslinux.xyz.
-wordpresslinux.xyz.     IN      A 40.69.203.168
-www     IN      A       40.69.203.168
-mail    IN      A       40.69.203.168
+wordpresslinux.xyz.     IN      A vm_ip_address
+www     IN      A       vm_ip_address
+mail    IN      A       vm_ip_address
 ```
 - before restarting the server, check if there are any syntax errors in the configuration files:
 ```
@@ -168,11 +168,11 @@ $TTL    86400
                           86400 )       ; Negative Cache TTL
 ;
 @       IN      NS      ns1.wordpresslinux.xyz.
-ns1     IN      A       40.69.203.168
+ns1     IN      A       vm_ip_address
 mail    IN      MX 10   mail.wordpresslinux.xyz.
-wordpresslinux.xyz.     IN      A 40.69.203.168
-www     IN      A       40.69.203.168
-mail    IN      A       40.69.203.168
+wordpresslinux.xyz.     IN      A vm_ip_address
+www     IN      A       vm_ip_address
+mail    IN      A       vm_ip_address
 ```
 - testing: 
 ```
@@ -273,7 +273,7 @@ vim /var/www/wordpresslinux.xyz/test.php`
         phpinfo();
 ?>
 ```
-- test it by going to browser: `ip_address/test.php`(http://40.69.203.168/test.php)
+- test it by going to browser: `ip_address/test.php`(http://vm_ip_address/test.php)
 
 ## **10. Installing and securing MySQL Server**
 ```
@@ -322,7 +322,7 @@ ls -l /var/www/wordpresslinux.xyz/
 ```
 - finish the setup in the UI, go to the VM IP address:
 ```
-http://40.69.203.168/wp-admin/
+http://vm_ip_address/wp-admin/
 username: xxx
 password: xxx
 ```
