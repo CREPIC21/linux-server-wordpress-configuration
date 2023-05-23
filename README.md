@@ -1,4 +1,5 @@
-# Linux Server Configuration - DNS, VPS, WEB, PHP, MySql, WordPress
+# Linux Server Configuration including:
+ - DNS, VPS, WEB, PHP, MySql, WordPress, SSH
 
 ## **1. Create VM in Azure or any other cloud provider(Digital Ocean, Linode, AWS...)**
 - use Ubuntu Server 20.04 image
