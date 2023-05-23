@@ -24,6 +24,10 @@ vim .ssh/authorized_keys
 - disable password authentication on the server(`PasswordAuthentication no`) and restart the SSH service:
 ```
 vim /etc/ssh/sshd_config
+
+// set PasswordAuthentication to no in the configuration file
+PasswordAuthentication no
+
 systemctl restart ssh
 ```
 - now you can SSH to the VM without password(you will not be asked for a password anymore: 
@@ -33,7 +37,7 @@ ssh -p 22 <user_name>@<vm_ip_address>
 
 
 ## **3. Getting a Domain name**
-- for this example we used https://ap.www.namecheap.com/ and domain name `wordpresslinux.xyz`
+- for this example we used [Namecheap](https://ap.www.namecheap.com/) and domain name `wordpresslinux.xyz`
 - navigate to: `Domain List -> manage (next to domain wordpresslinux.xyz) -> Advanced DNS` and under `PERSONAL DNS SERVER` add two nameservers:
 ```
 ns1 with VM IP address
@@ -50,7 +54,10 @@ dig -t ns wordpresslinux.xyz
 ```
 
 ## **4. Installing a DNS Server (Bind9)**
-- SSH to VM
+- SSH to VM:
+```
+ssh -p 22 <user_name>@<vm_ip_address>
+```
 - as root run: 
 ```
 apt update && apt install bind9 bind9utils bind9-doc
@@ -62,17 +69,15 @@ systemctl status bind9
 - set IPv4 since we are using only IPv4 mode, add `-4` to the end of options parameter and restart the service:
 ```
 vim /etc/default/named
+
+// add `-4` to the end of options parameter in the configuration
+OPTIONS="-u bind -4"
+
 systemctl restart bind9
 ```
 - testing:
-1. sending DNS query to DNS server that is now running on a localhost: 
-```
-dig -t a @localhost google.com
-```
-2. sending DNS query to DNS server that is public from CloudFlare: 
-```
-dig -t a @1.1.1.1 google.com
-```
+  - sending DNS query to DNS server that is now running on a localhost: `dig -t a @localhost google.com`
+  - sending DNS query to DNS server that is public from CloudFlare: `dig -t a @1.1.1.1 google.com`
 - add two forwarders to our DNS Server in the `/etc/bind/named.conf.options` file, set public google DNS servers as forwarders for my server and restart the service:
 ```
 vim /etc/bind/named.conf.options
@@ -186,8 +191,9 @@ systemctl enable apache2
 ufw status
 ufw allow 'Apache Full'
 ```
-- testing -> open web browser and go to the VM IP address, trick to get IP address from terminal: `curl -4 ident.me`
-- testing -> open web browser and go to the VM domain name `wordpresslinux.xyz`
+- testing
+  - open web browser and go to the VM IP address, trick to get IP address from terminal: `curl -4 ident.me`
+  - open web browser and go to the VM domain name `wordpresslinux.xyz`
 
 ## **7. Setting up Virtual Hosting for multiple websites(domain names)**
 - create directory for each website in `/var/www/`:
@@ -239,7 +245,8 @@ systemctl reload apache2
 ```
 
 ## **8. Securing Apache with OpenSSH and Digital Certificates**
-```apt update && apt install certbot python3-certbot-apache
+```
+apt update && apt install certbot python3-certbot-apache
 certbot -d wordpresslinux.xyz
 certbot -d www.wordpresslinux.xyz
 systemctl status certbot.timer
@@ -247,11 +254,11 @@ certbot renew --dry-run
 ```
 
 ## **9. Installing PHP**
+- in addition to the PHP package we we are also installing php-mysql which is a PHP module that allows PHP to communicate with MySQL
+- we are also installing libapache2-mod-php which is required to enable Apache to handle BPHP files
 ```
 apt update && apt install php php-mysql libapache2-mod-php
 ```
-- in addition to the PHP package we we are also installing php-mysql which is a PHP module that allows PHP to communicate with MySQL
-- we are also installing libapache2-mod-php which is required to enable Apache to handle BPHP files
 - restart the service: 
 ```
 systemctl restart apache2
