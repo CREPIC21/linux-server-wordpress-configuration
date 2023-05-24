@@ -37,7 +37,7 @@ PasswordAuthentication no
 
 systemctl restart ssh
 ```
-- now you can SSH to the VM without password(you will not be asked for a password anymore: 
+- now you can SSH to the VM without password(you will not be asked for a password anymore): 
 ```
 ssh -p 22 <user_name>@<vm_ip_address>
 ```
@@ -55,7 +55,7 @@ ns2 with VM IP address
 ns1.wordpresslinux.xyz
 ns2.wordpresslinux.xyz
 ```
-- in can take up to few hours to 72 hours for change to take an effect, to check run in terminal:
+- in can take up to 72 hours for change to take an effect, to check run in terminal:
 ```
 dig -t ns wordpresslinux.xyz
 ```
@@ -73,7 +73,7 @@ apt update && apt install bind9 bind9utils bind9-doc
 ```
 systemctl status bind9
 ```
-- set IPv4 since we are using only IPv4 mode, add `-4` to the end of options parameter and restart the service:
+- set IPv4 since we are using only IPv4 mode, add `-4` to the end of options parameter in `/etc/default/named` file and restart the service:
 ```
 vim /etc/default/named
 
@@ -222,6 +222,9 @@ chmod 755 /var/www/wordpresslinux.xyz/
 - create html content in created directory:
 ```
 vim /var/www/wordpresslinux.xyz/index.html
+
+// add some text/html such as:
+Hello Wordpress!!!!
 ```
 - navigate to apache2 configuration directory
 ```
@@ -262,7 +265,7 @@ certbot renew --dry-run
 
 ## **9. Installing PHP**
 - in addition to the PHP package we we are also installing php-mysql which is a PHP module that allows PHP to communicate with MySQL
-- we are also installing libapache2-mod-php which is required to enable Apache to handle BPHP files
+- we are also installing libapache2-mod-php which is required to enable Apache to handle PHP files
 ```
 apt update && apt install php php-mysql libapache2-mod-php
 ```
@@ -293,7 +296,7 @@ systemctl status mysql
 ```
 ps -ef | grep mysql
 ```
-- MySQL is not very secure so it’s recommended to run a security script that comes pre-installed with MySQL, the script will remove some insecure default settings and lock down access to the database server by removing some MySQL accounts and setting the admin password:
+- MySQL is not very secure so it’s recommended to run a security script that comes pre-installed with MySQL, the script will remove some insecure default settings and lock down access to the database server by removing some MySQL accounts and setting the admin password, run command:
 ```
 mysql_secure_installation
 ```
