@@ -1,5 +1,11 @@
-# Linux Server Configuration including:
- - DNS, VPS, WEB, PHP, MySql, WordPress, SSH
+# Linux Server Configuration - Setting Up a Wordpress Site
+ - VM, SSH, DNS, VPS, WEB, PHP, MySql, WordPress
+
+> :mega: In the configuration steps replace all occurrences of:
+> - `wordpresslinux.xyz` with your chosen domain name
+> - `wordpress` with your own chosen word
+> - `vm_ip_address` with your VM IP address
+
 
 ## **1. Create VM in Azure or any other cloud provider(Digital Ocean, Linode, AWS...)**
 - use Ubuntu Server 20.04 image
@@ -94,7 +100,7 @@ systemctl restart bind9
 - if the server doesn't know the DNS information asked by the clients, it will send a recursive query to those two forwarder servers and wait for a final answer and if it gets the answer, it will pass it to the client that has asked for it in the first place
 - testing: 
 ```
-dig -t a @localhost parrotlinux.org
+dig -t a @localhost kali.org
 ```
 
 ## **5. Setting up the Authoritative BIND9 DNS Server**
