@@ -333,8 +333,6 @@ username: xxx
 password: xxx
 ```
 
-## **12. Securing WordPress**
-- https://www.wpbeginner.com/wordpress-security/
 
 
 
