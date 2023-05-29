@@ -209,7 +209,7 @@ a2enmod status
 ```
 - next step is to configure it and add my public IP address to the white listed IP addresses in `Location` directive:
 ```
-vim /etc/apache2/mods-avaliable/status.conf
+vim /etc/apache2/mods-available/status.conf
 ```
 ```
 <IfModule mod_status.c>
