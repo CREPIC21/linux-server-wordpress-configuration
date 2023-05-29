@@ -275,7 +275,7 @@ systemctl restart apache2
 ```
 - let's test Apache and PHP work together and are configured properly to handle dynamic content:
 ```
-vim /var/www/wordpresslinux.xyz/test.php`
+vim /var/www/wordpresslinux.xyz/test.php
 
 // testing configuration to add
 <?php
