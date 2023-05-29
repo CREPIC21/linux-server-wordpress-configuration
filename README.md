@@ -384,8 +384,16 @@ mysql -u root -p
 CREATE USER 'newuser'@'localhost' IDENTIFIED WITH caching_sha2_password BY 'newuser123#@!';
 GRANT ALL PRIVILEGES ON *.* TO 'newuser'@'localhost' WITH GRANT OPTION;
 ```
+- reload the apache server: 
+```
+systemctl restart apache2
+```
 - now in the browser you can login to the `phpMyAdmin` with new created user
 - to make `phpAdmin` more secure, change the URL used to access `phpMyAdmin` by changing the `Alias` directive in `/etc/phpmyadmin/apache.conf` file
+- - reload the apache server: 
+```
+systemctl restart apache2
+```
 
 ## **12. Installing a Web Application(WordPress)**
 - step 1 is to create a MySQL database, to store all the data like posts, pages, users, plugins or settings:
