@@ -207,7 +207,7 @@ ufw allow 'Apache Full'
 ```
 a2enmod status
 ```
-- next step is to configure it and add my public IP address to the white listed IP addresses in `Location` directive:
+- next step is to configure it and add my public IP address of my local machine(laptop/PC) to the white listed IP addresses in `Location` directive:
 ```
 vim /etc/apache2/mods-available/status.conf
 ```
