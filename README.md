@@ -208,6 +208,9 @@ ufw allow 'Apache Full'
 a2enmod status
 ```
 - next step is to configure it and add my public IP address of my local machine(laptop/PC) to the white listed IP addresses in `Location` directive:
+- how to find your IP address:
+  - using web just search for `what is my ip`: 
+  - running command: `curl ident.me`
 ```
 vim /etc/apache2/mods-available/status.conf
 ```
