@@ -395,7 +395,66 @@ systemctl restart apache2
 systemctl restart apache2
 ```
 
-## **12. Installing a Web Application(WordPress)**
+## **12. Enabling monitoring with monit for apache and mysql**
+- install monit, start it and enable it on boot:
+```
+apt install monit
+systemctl start monit
+systemctl enable monit
+```
+- rename original monit configuration file 
+```
+mv /etc/monit/monitrc /etc/monit/monitrc.ORIG
+```
+- create a new monit configuration file with the following template
+```
+vim /etc/monit/monitrc
+```
+```
+# monit rules
+set daemon  30
+set logfile /var/log/monit.log
+
+# Email alerts
+set alert someemail@gmail.com
+
+# monit web interface
+set httpd
+    port 2812
+    use address localhost  # only accept connection from localhost
+    # allow localhost        # allow localhost to connect to the server and
+    allow steve:steve66798jahsjahs98878989
+
+# Check apache2
+check process apache2 with pidfile "/var/run/apache2/apache2.pid"
+      start program = "/etc/init.d/apache2 start"
+      stop program = "/etc/init.d/apache2 stop"
+      group www-data
+
+# Check MySQL
+check host localmysql with address 127.0.0.1
+      if failed ping then alert
+      if failed port 3306 protocol mysql then alert
+
+# include files for individual sites
+include /etc/monit/conf-available/*.cfg
+```
+- change permission to 600 for main monit file
+```
+chmod 600 /etc/monit/monitrc
+```
+- restart monit
+```
+systemctl restart monit
+```
+- testing:
+  - try to connect with "wget localhost:2812" from VM, you should see an error: `HTTP request sent, awaiting response... 401 Unauthorized Username/Password Authentication Failed`
+    - check with command `netstat -tupln` which displays active TCP connections, ports on which the computer is listening
+  - we can only access monit monitoring from our local server
+    - from my local machine(laptop/PC) run "ssh -L 8383:localhost:2812 root@vm_ip_address" and now you can access monit web interface locally in browser visiting "http://127.0.0.1:8383/"
+    - check with command `netstat -tupln` which displays active TCP connections, ports on which the computer is listening
+
+## **13. Installing a Web Application(WordPress)**
 - step 1 is to create a MySQL database, to store all the data like posts, pages, users, plugins or settings:
 ```
 mysql -u root -p
