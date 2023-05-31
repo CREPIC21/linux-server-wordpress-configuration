@@ -31,10 +31,13 @@ vim .ssh/authorized_keys
 - disable password authentication on the server(`PasswordAuthentication no`) and restart the SSH service:
 ```
 vim /etc/ssh/sshd_config
-
+```
+```
 // set PasswordAuthentication to no in the configuration file
 PasswordAuthentication no
-
+```
+- restart the service:
+```
 systemctl restart ssh
 ```
 - now you can SSH to the VM without password(you will not be asked for a password anymore): 
@@ -76,10 +79,13 @@ systemctl status bind9
 - set IPv4 since we are using only IPv4 mode, add `-4` to the end of options parameter in `/etc/default/named` file and restart the service:
 ```
 vim /etc/default/named
-
+```
+```
 // add `-4` to the end of options parameter in the configuration
 OPTIONS="-u bind -4"
-
+```
+- restart the service:
+```
 systemctl restart bind9
 ```
 - testing:
@@ -88,13 +94,16 @@ systemctl restart bind9
 - add two forwarders to our DNS Server in the `/etc/bind/named.conf.options` file, set public google DNS servers as forwarders for my server and restart the service:
 ```
 vim /etc/bind/named.conf.options
-
+```
+```
 // configuration to add
 forwarders {
       8.8.8.8;
       8.8.4.4;
 };
-
+```
+- restart the service:
+```
 systemctl restart bind9
 ```
 - if the server doesn't know the DNS information asked by the clients, it will send a recursive query to those two forwarder servers and wait for a final answer and if it gets the answer, it will pass it to the client that has asked for it in the first place
@@ -390,7 +399,7 @@ systemctl restart apache2
 ```
 - now in the browser you can login to the `phpMyAdmin` with new created user
 - to make `phpAdmin` more secure, change the URL used to access `phpMyAdmin` by changing the `Alias` directive in `/etc/phpmyadmin/apache.conf` file
-- - reload the apache server: 
+- reload the apache server: 
 ```
 systemctl restart apache2
 ```
@@ -484,8 +493,73 @@ username: xxx
 password: xxx
 ```
 
+## **14. Automating site and database backups using cron**
+- create site backups directory in `root` directory:
+```
+mkdir /root/site_backups
+```
+- create database backups directory in `/var/www/wordpresslinux.xyz/` directory:
+```
+mkdir /var/www/wordpresslinux.xyz/backups/db
+```
+- rename original crontab configuration file and make a copy:
+```
+mv /etc/crontab /etc/crontab.ORIG
+```
+- create a new crontab configuration:
+```
+vim /etc/crontab
+```
+```
+# /etc/crontab: system-wide crontab
+# Unlike any other crontab you don't have to run the `crontab'
+# command to install the new version when you edit this file
+# and files in /etc/cron.d. These files also have username fields,
+# that none of the other crontabs do.
 
+SHELL=/bin/sh
+# You can also override PATH, but by default, newer versions inherit it from the environment
+#PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
 
+# Example of job definition:
+# .---------------- minute (0 - 59)
+# |  .------------- hour (0 - 23)
+# |  |  .---------- day of month (1 - 31)
+# |  |  |  .------- month (1 - 12) OR jan,feb,mar,apr ...
+# |  |  |  |  .---- day of week (0 - 6) (Sunday=0 or 7) OR sun,mon,tue,wed,thu,fri,sat
+# |  |  |  |  |
+# *  *  *  *  * user-name command to be executed
+17 *    * * *   root    cd / && run-parts --report /etc/cron.hourly
+25 6    * * *   root    test -x /usr/sbin/anacron || ( cd / && run-parts --report /etc/cron.daily )
+47 6    * * 7   root    test -x /usr/sbin/anacron || ( cd / && run-parts --report /etc/cron.weekly )
+52 6    1 * *   root    test -x /usr/sbin/anacron || ( cd / && run-parts --report /etc/cron.monthly )
+# site backups
+20 13    * * *   root    /bin/tar -zcf /root/site_backups/$(/bin/date +\%Y-\%m-\%d).tar.gz /var/www/wordpresslinux.xyz/
+# database backups
+18 13    * * *   root    mysqldump --add-drop-table --databases wordpressuser > /var/www/wordpresslinux.xyz/backups/db/$(/bin/date +\%Y-\%m-\%d).sql.bak
+```
+- to restore backups with tar we would just use the command below:
+```
+tar -zxf <file_name>
+```
+- replacing hacked home site directory:
+```
+mv /var/www/wordpresslinux.xyz/ /var/www/wordpresslinux.xyzHACKED
+```
+```
+cp -r /root/site_backups/var/www/wordpresslinux.xyz/ /var/www/
+```
+- restore website database:
+```
+cd /var/www/wordpresslinux.xyz/backups/db/
+```
+- before importing the backup database to mysql you need to create a database if it doesn't exist:
+```
+CREATE DATABASE wordpress;
+```
+```
+mysql -u root -p wordpress < 2023-05-31.sql.bak
+```
 
 
 
