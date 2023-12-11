@@ -1,7 +1,7 @@
 # Linux Server Configuration - Setting Up a Wordpress Site
  - VM, SSH, Domain Name, DNS, VPS, WEB, OpenSSH, PHP, phpMyAdmin, MySql, WordPress
 
-> :mega: In the configuration steps replace all occurrences of:
+💡 In the configuration steps replace all occurrences of:
 > - `wordpresslinux.xyz` with your chosen domain name
 > - `wordpress` with your own chosen word
 > - `vm_ip_address` with your VM IP address
